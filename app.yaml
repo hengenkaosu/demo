@@ -61,3 +61,4 @@ spec:
           # paceholders are resolved when an AnalysisRun is created
           url: "http://{{args.host}}/"
           jsonPath: "{$.status}"
+#
