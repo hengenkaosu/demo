@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: colorapideployment
+  labels:
+    app: colorapideployment
+spec:
+  replicas: 5
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: colorapideployment
+  template:
+    metadata:
+      labels:
+        app: colorapideployment
+    spec:
+      containers:
+        - name: colorapideployment
+          image: particule/simplecolorapi:1.0
+          imagePullPolicy: Always
+          ports:
+            - name: web
+              containerPort: 5000
