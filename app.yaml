@@ -25,6 +25,14 @@ spec:
               containerPort: 5000
   strategy:
     canary:
+      canaryService: canary-svc  # required
+      stableService: stable-svc  # required
+      trafficRouting:
+        istio:
+          virtualService:
+            name: rollout-vsvc  # required
+            routes:
+              - primary  # At least one route is required
       steps:
         - setWeight: 20
         - pause:
@@ -33,13 +41,21 @@ spec:
         - pause:
             duration: "30s"
 ---
-apiVersion: v1
-kind: Service
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
 metadata:
-  name: colorapi
+  name: rollout-vsvc
 spec:
-  ports:
-    - port: 80
-  selector:
-    app: colorapi
-  type: LoadBalancer
+  gateways:
+    - istio-rollout-gateway
+  hosts:
+    - istio-rollout.dev.argoproj.io
+  http:
+    - name: primary
+      route:
+        - destination:
+            host: stable-svc
+          weight: 100
+        - destination:
+            host: canary-svc
+          weight: 0
