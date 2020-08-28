@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: colorapi
-          image: dne
+          image: particule/simplecolorapi:1.0
           imagePullPolicy: Always
           ports:
             - name: web
